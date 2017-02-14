@@ -17,41 +17,51 @@ env:
 
   matrix:
     # coveralls is not listed in tox's envlist, but should run in travis
-    - TESTENV=coveralls
+    - TESTENV=coveralls RESULTS="[$TESTENV]results.xml [$TESTENV]coverage.xml"
     # note: please use "tox --listenvs" to populate the build matrix below
-    - TESTENV=linting
-    - TESTENV=py26
-    - TESTENV=py27
-    - TESTENV=py33
-    - TESTENV=py34
-    - TESTENV=py35
-    - TESTENV=pypy
-    - TESTENV=py27-pexpect
-    - TESTENV=py27-xdist
-    - TESTENV=py27-trial
-    - TESTENV=py35-pexpect
-    - TESTENV=py35-xdist
-    - TESTENV=py35-trial
-    - TESTENV=py27-nobyte
-    - TESTENV=doctesting
+    - TESTENV=linting RESULTS=analysis.log{lint}
+    - TESTENV=py26 RESULTS=[$TESTENV]results.xml 
+    - TESTENV=py27 RESULTS=[$TESTENV]results.xml
+    - TESTENV=py33 RESULTS=[$TESTENV]results.xml
+    - TESTENV=py34 RESULTS=[$TESTENV]results.xml
+    - TESTENV=py35 RESULTS=[$TESTENV]results.xml
+    - TESTENV=pypy RESULTS=[$TESTENV]results.xml
+    - TESTENV=py27-pexpect RESULTS=[$TESTENV]results.xml
+    - TESTENV=py27-xdist RESULTS=[$TESTENV]results.xml
+    - TESTENV=py27-trial RESULTS=[$TESTENV]results.xml
+    - TESTENV=py35-pexpect RESULTS=[$TESTENV]results.xml
+    - TESTENV=py35-xdist RESULTS=[$TESTENV]results.xml
+    - TESTENV=py35-trial RESULTS=[$TESTENV]results.xml
+    - TESTENV=py27-nobyte RESULTS=[$TESTENV]results.xml
+    - TESTENV=doctesting RESULTS=[$TESTENV]results.xml
     - TESTENV=freeze
     - TESTENV=docs
 
 matrix:
   include:
-    - env: TESTENV=py36
+    - env: TESTENV=py36 RESULTS=[$TESTENV-3.6-dev]results.xml
       python: '3.6-dev'
-    - env: TESTENV=py37
+    - env: TESTENV=py37 RESULTS=[$TESTENV-3.6-dev]results.xml
       python: 'nightly'
 
-script: tox --recreate -e $TESTENV
+script: 
+  - tox --recreate -e $TESTENV
+  - testspace $RESULTS $TS?add#$NAME || testspace $RESULTS $TS?start#$NAME
 
-notifications:
-  irc:
-    channels:
-      - "chat.freenode.net#pytest"
-    on_success: change
-    on_failure: change
-    skip_join: true
-  email:
-    - pytest-commit@python.org
+after_script:
+  - python travis_after_all.py https://api.travis-ci.org
+  - export $(cat .to_export_back)
+  - |
+      if [ "$BUILD_LEADER" = "YES" ]; then
+          testspace $TESTSPACE_TOKEN/${TRAVIS_BRANCH}?finish#travis.Build.${TRAVIS_BUILD_NUMBER}
+      fi
+
+#notifications:
+#  irc:
+#    channels:
+#      - "chat.freenode.net#pytest"
+#    on_success: change
+#    on_failure: change
+#    skip_join: true
+#  email:
+#    - pytest-commit@python.org
