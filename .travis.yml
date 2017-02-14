@@ -3,9 +3,18 @@ language: python
 python:
     - '3.5'
 # command to install dependencies
-install: "pip install -U tox"
+install: 
+  - "pip install -U tox"
+  - mkdir -p ~/.local/bin; curl -s https://testspace-client.s3.amazonaws.com/testspace-linux.tgz | tar -zxvf- -C ~/.local/bin
+  - curl -Lo travis_after_all.py https://raw.github.com/dmakhno/travis_after_all/master/travis_after_all.py
+
 # # command to run tests
 env:
+  global:
+    - secure: Jp2cqxi2Dp6zdMROnE65KULEcoqnqS2DhR/j3NGUnTWVGqW37qxtcDdLu8ZiMwDDDZYbF+FdagFnbr3IfoO7ILTwAgCy1b1nagGmgooBntzNJpD55gupJhj2UlqhNcKn7AqTWRX8ztvSfBjGsJza+8ae3DD5v/E63ZC+VmzaMI0CAHAqeiWszc4Av+bbsA3lk/nfQrO98czs5HyshvTrUTr/51jZf4ZNiktNyl7Nqqcfc4BliSdFj6mJjoswAVRVvCv4FQ74kiQiXv5/ospatMa/jQk1SIjVldlLUN10FkjiEEtibz6pSYkmVTwtTPC27mFnXC2NaxGG+gyM5dxbxl0CIUEA6M9UijKzyGXBKbTAKjqAm3eYI4QBk0rQkaMRJ56w3no/xqOaGap5SETJU3PYfSPmhqs1qq7WKGQpbdqNz4S1P5tccMzUcYltNBwqJeExWtYGBO1kYqYZLI4AVqZFltVjmuI4++EfAj+uGkaOQYdEEiZXMNW3zSLrPWvG9FF4KsdJX/A7Dm2jK68KFwvtVEsbozTaEQ4Mh4WVeCCjhHbDD24S/HepmpqHuhR7nkJFCxeMavGQgENXIoND0aqkFUvQssrcjK+soa+QaZi/gAgWt4LtkL1NlsPu4sR/nFMPK5yQaZ43RDzo4iUh76LrNSjTCduxMtoq+qVGLO8=
+    - TS=$TESTSPACE_TOKEN/${TRAVIS_BRANCH}
+    - NAME=travis.Build.${TRAVIS_BUILD_NUMBER}
+
   matrix:
     # coveralls is not listed in tox's envlist, but should run in travis
     - TESTENV=coveralls
