@@ -1,26 +1,22 @@
 sudo: false
 language: python
 python:
-    - '3.5'
-# command to install dependencies
-install: 
-  - "pip install -U tox"
+ - '3.5'
+install:
+  - pip install -U tox
   - mkdir -p ~/.local/bin; curl -s https://testspace-client.s3.amazonaws.com/testspace-linux.tgz | tar -zxvf- -C ~/.local/bin
   - curl -Lo travis_after_all.py https://raw.github.com/dmakhno/travis_after_all/master/travis_after_all.py
 
-# # command to run tests
 env:
   global:
-    - secure: Jp2cqxi2Dp6zdMROnE65KULEcoqnqS2DhR/j3NGUnTWVGqW37qxtcDdLu8ZiMwDDDZYbF+FdagFnbr3IfoO7ILTwAgCy1b1nagGmgooBntzNJpD55gupJhj2UlqhNcKn7AqTWRX8ztvSfBjGsJza+8ae3DD5v/E63ZC+VmzaMI0CAHAqeiWszc4Av+bbsA3lk/nfQrO98czs5HyshvTrUTr/51jZf4ZNiktNyl7Nqqcfc4BliSdFj6mJjoswAVRVvCv4FQ74kiQiXv5/ospatMa/jQk1SIjVldlLUN10FkjiEEtibz6pSYkmVTwtTPC27mFnXC2NaxGG+gyM5dxbxl0CIUEA6M9UijKzyGXBKbTAKjqAm3eYI4QBk0rQkaMRJ56w3no/xqOaGap5SETJU3PYfSPmhqs1qq7WKGQpbdqNz4S1P5tccMzUcYltNBwqJeExWtYGBO1kYqYZLI4AVqZFltVjmuI4++EfAj+uGkaOQYdEEiZXMNW3zSLrPWvG9FF4KsdJX/A7Dm2jK68KFwvtVEsbozTaEQ4Mh4WVeCCjhHbDD24S/HepmpqHuhR7nkJFCxeMavGQgENXIoND0aqkFUvQssrcjK+soa+QaZi/gAgWt4LtkL1NlsPu4sR/nFMPK5yQaZ43RDzo4iUh76LrNSjTCduxMtoq+qVGLO8=
     - TS=$TESTSPACE_TOKEN/${TRAVIS_BRANCH}
     - NAME=travis.Build.${TRAVIS_BUILD_NUMBER}
+    - secure: FlN3oS2RQ+Hi4LGx4XvcHl4azyGfc7QoylT82qzFzPRKI6a+1zSxoLxTD3o9lZwAPqvEd5bBCO6+LntB5a7d0Nqg6T5/ThhgbSZjXYbgYqcFMYU/HRHVce+5z+nmXzZZVgbrw9Ydxf1Qqfnk6GdR+Ytwnwm+sVt73A7y2ohVRuM9QIpWm9fLE2xdZ0gZv8BOKJO+sDmVmQHYKQsMBwzg1ZC3A35pyZwcD8DWmFe/Y62LR6NLFmxibOH2JbNa/sWDtRaZiDaxWMhW/Vxz8U55NiySyDehjXsOsU8HJmkkBfYMYv6g6dsMauJldPvA27UCfndUyhIYo7w9ehMS2NGpvMFg9d9vqPNVPE+ZPcrXaqSh55hPBBDNUgM2oMzA7wPTGhCPZxnytVf37JQa7KV+sdC57JxEfMz3iMY760MimpmYChKJfAV4iY75n5Zdj+c7FYhXgUSQWOqaTT1YasgND9k3nxOJDLd0MjXhyYKSZu5LnEDgi3QqYg5C93oiPhSfNUFhKZ4GvDjoL6kOT2Dk1yCGE5ba+SjkCWNSqA+hRyUZC5+E30GXT6v/Ch6jT+aBNnNZXk1j6TPuXv3GFnrUEP0ZH+II+iXjjeop9cnWb7ZBl40ncE5KUWIVWuW2EWVarESmKrkqdmxjgAA/fshWNIG1YOxl80OYkmjcX2bkniU=
 
   matrix:
-    # coveralls is not listed in tox's envlist, but should run in travis
     - TESTENV=coveralls RESULTS="[$TESTENV]results.xml [$TESTENV]coverage.xml"
-    # note: please use "tox --listenvs" to populate the build matrix below
     - TESTENV=linting RESULTS=analysis.log{lint}
-    - TESTENV=py26 RESULTS=[$TESTENV]results.xml 
+    - TESTENV=py26 RESULTS=[$TESTENV]results.xml
     - TESTENV=py27 RESULTS=[$TESTENV]results.xml
     - TESTENV=py33 RESULTS=[$TESTENV]results.xml
     - TESTENV=py34 RESULTS=[$TESTENV]results.xml
@@ -36,32 +32,19 @@ env:
     - TESTENV=doctesting RESULTS=[$TESTENV]results.xml
     - TESTENV=freeze
     - TESTENV=docs
-
 matrix:
   include:
     - env: TESTENV=py36 RESULTS=[$TESTENV-3.6-dev]results.xml
-      python: '3.6-dev'
+      python: 3.6-dev
     - env: TESTENV=py37 RESULTS=[$TESTENV-3.6-dev]results.xml
-      python: 'nightly'
-
-script: 
+      python: nightly
+script:
   - tox --recreate -e $TESTENV
   - testspace $RESULTS $TS?add#$NAME || testspace $RESULTS $TS?start#$NAME
-
 after_script:
   - python travis_after_all.py https://api.travis-ci.org
   - export $(cat .to_export_back)
   - |
       if [ "$BUILD_LEADER" = "YES" ]; then
-          testspace $TESTSPACE_TOKEN/${TRAVIS_BRANCH}?finish#travis.Build.${TRAVIS_BUILD_NUMBER}
+        testspace $TESTSPACE_TOKEN/${TRAVIS_BRANCH}?finish#travis.Build.${TRAVIS_BUILD_NUMBER}
       fi
-
-#notifications:
-#  irc:
-#    channels:
-#      - "chat.freenode.net#pytest"
-#    on_success: change
-#    on_failure: change
-#    skip_join: true
-#  email:
-#    - pytest-commit@python.org
