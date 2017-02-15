@@ -38,13 +38,19 @@ matrix:
       python: 3.6-dev
     - env: TESTENV=py37 RESULTS=[$TESTENV-3.6-dev]results.xml
       python: nightly
+
+before_script:
+  - if [ "${TRAVIS_JOB_NUMBER#*.}" -eq "1" ] ; then testspace $TS?start#$NAME ; fi
+  
 script:
+  - sleep 5 # delay to ensure job 1 creates TS record
   - tox --recreate -e $TESTENV
-  - testspace $RESULTS $TS?add#$NAME || testspace $RESULTS $TS?start#$NAME
+  - testspace $RESULTS $TS?add#$NAME 
+
 after_script:
   - python travis_after_all.py https://api.travis-ci.org
   - export $(cat .to_export_back)
   - |
       if [ "$BUILD_LEADER" = "YES" ]; then
-        testspace $TESTSPACE_TOKEN/${TRAVIS_BRANCH}?finish#travis.Build.${TRAVIS_BUILD_NUMBER}
+        testspace $TS?finish#NAME
       fi
