@@ -36,9 +36,9 @@ env:
 
 matrix:
   include:
-    - env: TESTENV=py36 RESULTS=[$TESTENV-3.6-dev]results.xml
+    - env: TESTENV=py36 RESULTS=[$TESTENV]results.xml
       python: 3.6-dev
-    - env: TESTENV=py37 RESULTS=[$TESTENV-3.6-dev]results.xml
+    - env: TESTENV=py37 RESULTS=[$TESTENV]results.xml
       python: nightly
 
 before_script:
@@ -48,10 +48,6 @@ script:
   - sleep 5 # delay to ensure job 1 creates TS record
   - tox --recreate -e $TESTENV
   - testspace $RESULTS $TS?add#$NAME 
-  - echo $TS2
-  - echo $TESTENV
-  - echo $NAME
-  - echo $TS2/$TESTENV/#$NAME
   - testspace $RESULTS $TS2/$TESTENV/#$NAME
 
 after_script:
