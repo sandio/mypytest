@@ -48,6 +48,9 @@ script:
   - sleep 5 # delay to ensure job 1 creates TS record
   - tox --recreate -e $TESTENV
   - testspace $RESULTS $TS?add#$NAME 
+  - echo $TS2
+  - echo $NAME
+  - echo $TS2#$NAME
   - testspace $RESULTS $TS2#$NAME
 
 after_script:
