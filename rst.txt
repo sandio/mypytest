@@ -1,0 +1,1 @@
+INFO File README.rst is clean.
