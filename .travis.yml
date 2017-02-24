@@ -17,9 +17,9 @@ env:
 
   matrix:
   #  - TESTENV=coveralls RESULTS="[$TESTENV]results.xml{testing} [$TESTENV]coverage.xml"
-    - TESTENV=linting RESULTS=analysis.log{lint}
-    - TESTENV=py26 RESULTS=[$TESTENV]results.xml{testing}
-  #  - TESTENV=py27 RESULTS=[$TESTENV]results.xml{testing}
+  #  - TESTENV=linting RESULTS=analysis.log{lint}
+     - TESTENV=py26 
+     - TESTENV=py27 
   #  - TESTENV=py33 RESULTS=[$TESTENV]results.xml{testing}
   #  - TESTENV=py34 RESULTS=[$TESTENV]results.xml{testing}
   #  - TESTENV=py35 RESULTS=[$TESTENV]results.xml{testing}
@@ -43,17 +43,18 @@ env:
 #      python: nightly
 
 before_script:
-  - if [ "${TRAVIS_JOB_NUMBER#*.}" -eq "1" ] ; then testspace $TS?start#$NAME ; fi
+  - if [ "${TRAVIS_JOB_NUMBER#*.}" -eq "1" ] ; then testspace "?start#$NAME" ; fi
   
 script:
   - tox --recreate -e $TESTENV
-  - testspace $RESULTS "?add#$NAME" 
+  - testspace results.xml{testing} "?add/$TESTENV/#$NAME"
+#  - testspace $RESULTS "?add#$NAME" 
 #  - testspace $RESULTS $TS2/$TESTENV/#$NAME
 
-#after_script:
-#  - python travis_after_all.py https://api.travis-ci.org
-#  - export $(cat .to_export_back)
-#  - |
-#      if [ "$BUILD_LEADER" = "YES" ]; then
-#        testspace $TS?finish#NAME
-#      fi
+after_script:
+  - python travis_after_all.py https://api.travis-ci.org
+  - export $(cat .to_export_back)
+  - |
+      if [ "$BUILD_LEADER" = "YES" ]; then
+        testspace $TS?finish#NAME
+      fi
