@@ -4,50 +4,51 @@ python:
  - '3.5'
 install:
   - pip install -U tox
-  - mkdir -p ~/.local/bin; curl -s https://testspace-client.s3.amazonaws.com/testspace-linux-daily.tgz | tar -zxvf- -C ~/.local/bin
+  
+  - mkdir -p $PWD/testspace; export PATH=$PATH:$PWD/testspace
+  - curl -s https://testspace-client.s3.amazonaws.com/testspace-linux-daily.tgz | tar -zxvf- -C $PWD/testspace
+  - testspace config url ${MARK_TOKEN}@mark.stridespace.com
   - curl -Lo travis_after_all.py https://raw.github.com/dmakhno/travis_after_all/master/travis_after_all.py
 
 env:
   global:
-    - TS=$TESTSPACE_TOKEN/${TRAVIS_BRANCH}
-    - TS2=$TESTSPACE_TOKEN2
     - NAME=travis.Build.${TRAVIS_BUILD_NUMBER}
     - secure: PCiG8k7DwvwevYSC9eNm27kEXYfZueQuxiR/uEvjfHwhv+hn5pjeN0NFMyM+uabG7LA+3Bd2yl4zokBTF4rti2m35SJvqNTzbQIVGOatqqiJoQnptFLSeTtO4T+wmh+Nq8Z8WjauotyGp1UuLBKdff+ViCRyK9OcQG/t8WKmnNAKVhRkibJFw//ROUCih/nVs7V/Q/QXbUjj2Vj69if5VaqZq/HYkIngvZ4JKx9Xz8fSQImXQWFNG/TVompT5cG9Rdn2mx4rY2HxSH4Z2i13fJv+sDIgzDkJbjEjl5pDGXDECkRH3Rd/75hFqbDK5nKhwXDFcHy2976SzPUPsRWrp068MMIGIL0RqLXo0toZM3nhxe1OqpzAL641Ru4R36ClETmeB2S3R+/uQ174s+uX/iBAHiKVVoUDPhKVW0ZB+m7fG6Zrna8qJbzJPsF9QSlmHAT9on8ps82DmK8jNQDr4w7eKcb8SoMWwvL+MgEM7eoHZk3hf4vzFOFlJzSicxVLFUX8BzE5734CUPZslE7lRg1+5BJswKVc3IFlqO8/PpjqMotopbiexY/2JI1tsOBQy1gMPLE4FpN8Y0SGd0U9c0B+T/uRPzzfvtWhJQbmabzHkynK4qIfQ1XKudPVi5euwqtUovkasBX+HFxRqcf0q83jDEGvhHxZ7acn2UOR/l8=
 
   matrix:
-    - TESTENV=coveralls RESULTS="[$TESTENV]results.xml{testing} [$TESTENV]coverage.xml"
+  #  - TESTENV=coveralls RESULTS="[$TESTENV]results.xml{testing} [$TESTENV]coverage.xml"
     - TESTENV=linting RESULTS=analysis.log{lint}
     - TESTENV=py26 RESULTS=[$TESTENV]results.xml{testing}
-    - TESTENV=py27 RESULTS=[$TESTENV]results.xml{testing}
-    - TESTENV=py33 RESULTS=[$TESTENV]results.xml{testing}
-    - TESTENV=py34 RESULTS=[$TESTENV]results.xml{testing}
-    - TESTENV=py35 RESULTS=[$TESTENV]results.xml{testing}
-    - TESTENV=pypy RESULTS=[$TESTENV]results.xml{testing}
-    - TESTENV=py27-pexpect RESULTS=[$TESTENV]results.xml{testing}
-    - TESTENV=py27-xdist RESULTS=[$TESTENV]results.xml{testing}
-    - TESTENV=py27-trial RESULTS=[$TESTENV]results.xml{testing}
-    - TESTENV=py35-pexpect RESULTS=[$TESTENV]results.xml{testing}
-    - TESTENV=py35-xdist RESULTS=[$TESTENV]results.xml{testing}
-    - TESTENV=py35-trial RESULTS=[$TESTENV]results.xml{testing}
-    - TESTENV=py27-nobyte RESULTS=[$TESTENV]results.xml{testing}
-    - TESTENV=doctesting RESULTS=[$TESTENV]results.xml{testing}
-    - TESTENV=freeze
-    - TESTENV=docs
+  #  - TESTENV=py27 RESULTS=[$TESTENV]results.xml{testing}
+  #  - TESTENV=py33 RESULTS=[$TESTENV]results.xml{testing}
+  #  - TESTENV=py34 RESULTS=[$TESTENV]results.xml{testing}
+  #  - TESTENV=py35 RESULTS=[$TESTENV]results.xml{testing}
+  #  - TESTENV=pypy RESULTS=[$TESTENV]results.xml{testing}
+  #  - TESTENV=py27-pexpect RESULTS=[$TESTENV]results.xml{testing}
+  #  - TESTENV=py27-xdist RESULTS=[$TESTENV]results.xml{testing}
+  #  - TESTENV=py27-trial RESULTS=[$TESTENV]results.xml{testing}
+  #  - TESTENV=py35-pexpect RESULTS=[$TESTENV]results.xml{testing}
+  #  - TESTENV=py35-xdist RESULTS=[$TESTENV]results.xml{testing}
+  #  - TESTENV=py35-trial RESULTS=[$TESTENV]results.xml{testing}
+  #  - TESTENV=py27-nobyte RESULTS=[$TESTENV]results.xml{testing}
+  #  - TESTENV=doctesting RESULTS=[$TESTENV]results.xml{testing}
+  #  - TESTENV=freeze
+  #  - TESTENV=docs
 
-matrix:
-  include:
-    - env: TESTENV=py36 RESULTS=[$TESTENV]results.xml
-      python: 3.6-dev
-    - env: TESTENV=py37 RESULTS=[$TESTENV]results.xml
-      python: nightly
+#matrix:
+#  include:
+#    - env: TESTENV=py36 RESULTS=[$TESTENV]results.xml
+#      python: 3.6-dev
+#    - env: TESTENV=py37 RESULTS=[$TESTENV]results.xml
+#      python: nightly
 
 before_script:
   - if [ "${TRAVIS_JOB_NUMBER#*.}" -eq "1" ] ; then testspace $TS?start#$NAME ; fi
   
 script:
   - tox --recreate -e $TESTENV
-  - testspace $RESULTS $TS?add#$NAME 
-  - testspace $RESULTS $TS2/$TESTENV/#$NAME
+  - testspace $RESULTS "?add#$NAME" 
+#  - testspace $RESULTS $TS2/$TESTENV/#$NAME
 
 #after_script:
 #  - python travis_after_all.py https://api.travis-ci.org
