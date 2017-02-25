@@ -8,7 +8,7 @@ install:
   - mkdir -p $PWD/testspace; export PATH=$PATH:$PWD/testspace
   - curl -s https://testspace-client.s3.amazonaws.com/testspace-linux-daily.tgz | tar -zxvf- -C $PWD/testspace
   - testspace config url ${MARK_TOKEN}@mark.stridespace.com
-  - curl -Lo travis_after_all.py https://raw.github.com/dmakhno/travis_after_all/master/travis_after_all.py
+#  - curl -Lo travis_after_all.py https://raw.github.com/dmakhno/travis_after_all/master/travis_after_all.py
 
 env:
   global:
@@ -49,13 +49,20 @@ before_script:
 script:
   - tox --recreate -e $TESTENV
   - testspace $RESULTS "?add#$NAME/$TESTENV"
+  - testspace config project munderseth:mypytest-2
+  - testspace $RESULTS $TESTENV#$TRAVIS_JOB_NAME
 #  - testspace $RESULTS "?add#$NAME" 
 #  - testspace $RESULTS $TS2/$TESTENV/#$NAME
 
 after_script:
-  - python travis_after_all.py https://api.travis-ci.org
-  - export $(cat .to_export_back)
-  - |
-      if [ "$BUILD_LEADER" = "YES" ]; then
-        testspace $TS?finish#NAME
-      fi
+  - printenv 
+  - testspace -v
+  - testspace config
+
+#after_script:
+#  - python travis_after_all.py https://api.travis-ci.org
+#  - export $(cat .to_export_back)
+#  - |
+#      if [ "$BUILD_LEADER" = "YES" ]; then
+#        testspace $TS?finish#NAME
+#      fi
