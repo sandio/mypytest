@@ -50,7 +50,7 @@ script:
   - tox --recreate -e $TESTENV
   - testspace $RESULTS "?add#$NAME/$TESTENV"
   - testspace config project munderseth:mypytest-2
-  - testspace $RESULTS $TESTENV#$TRAVIS_JOB_NAME
+  - testspace $RESULTS $TESTENV#$TRAVIS_JOB_NUMBER
 #  - testspace $RESULTS "?add#$NAME" 
 #  - testspace $RESULTS $TS2/$TESTENV/#$NAME
 
