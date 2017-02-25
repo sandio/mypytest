@@ -34,7 +34,7 @@ env:
   #  - TESTENV=py27-nobyte RESULTS=[$TESTENV]results.xml{testing}
   #  - TESTENV=doctesting RESULTS=[$TESTENV]results.xml{testing}
   #  - TESTENV=freeze
-  #  - TESTENV=docs
+     - TESTENV=docs RESULTS=doc/results.xml
 
 #matrix:
 #  include:
