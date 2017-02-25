@@ -32,7 +32,7 @@ env:
   #  - TESTENV=py35-xdist RESULTS=[$TESTENV]results.xml{testing}
      - TESTENV=py35-trial 
   #  - TESTENV=py27-nobyte RESULTS=[$TESTENV]results.xml{testing}
-     - TESTENV=doctesting RESULTS=doc/results.xml
+     - TESTENV=doctesting RESULTS=doc/doc-results*.xml
   #  - TESTENV=freeze
   #  - TESTENV=docs 
 
