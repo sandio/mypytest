@@ -49,7 +49,8 @@ before_script:
 script:
   - tox --recreate -e $TESTENV
   - testspace $RESULTS "?add#$NAME/$TESTENV"
-  - testspace config project munderseth:mypytest-2/$TESTENV
+  - testspace config project munderseth:mypytest-2
+  - testspace config space "$TESTENV"
   - testspace $RESULTS "#$TRAVIS_JOB_NUMBER"
 #  - testspace $RESULTS "?add#$NAME" 
 #  - testspace $RESULTS $TS2/$TESTENV/#$NAME
