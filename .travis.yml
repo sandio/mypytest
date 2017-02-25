@@ -12,7 +12,8 @@ install:
 
 env:
   global:
-    - RESULTS="./**/results*.xml{testing}"
+ #   - RESULTS="./**/results*.xml{testing}"
+    - RESULTS=results.xml{testing}
     - NAME=travis.Build.${TRAVIS_BUILD_NUMBER}
     - secure: PCiG8k7DwvwevYSC9eNm27kEXYfZueQuxiR/uEvjfHwhv+hn5pjeN0NFMyM+uabG7LA+3Bd2yl4zokBTF4rti2m35SJvqNTzbQIVGOatqqiJoQnptFLSeTtO4T+wmh+Nq8Z8WjauotyGp1UuLBKdff+ViCRyK9OcQG/t8WKmnNAKVhRkibJFw//ROUCih/nVs7V/Q/QXbUjj2Vj69if5VaqZq/HYkIngvZ4JKx9Xz8fSQImXQWFNG/TVompT5cG9Rdn2mx4rY2HxSH4Z2i13fJv+sDIgzDkJbjEjl5pDGXDECkRH3Rd/75hFqbDK5nKhwXDFcHy2976SzPUPsRWrp068MMIGIL0RqLXo0toZM3nhxe1OqpzAL641Ru4R36ClETmeB2S3R+/uQ174s+uX/iBAHiKVVoUDPhKVW0ZB+m7fG6Zrna8qJbzJPsF9QSlmHAT9on8ps82DmK8jNQDr4w7eKcb8SoMWwvL+MgEM7eoHZk3hf4vzFOFlJzSicxVLFUX8BzE5734CUPZslE7lRg1+5BJswKVc3IFlqO8/PpjqMotopbiexY/2JI1tsOBQy1gMPLE4FpN8Y0SGd0U9c0B+T/uRPzzfvtWhJQbmabzHkynK4qIfQ1XKudPVi5euwqtUovkasBX+HFxRqcf0q83jDEGvhHxZ7acn2UOR/l8=
 
