@@ -32,9 +32,9 @@ env:
   #  - TESTENV=py35-xdist RESULTS=[$TESTENV]results.xml{testing}
      - TESTENV=py35-trial 
   #  - TESTENV=py27-nobyte RESULTS=[$TESTENV]results.xml{testing}
-  #  - TESTENV=doctesting RESULTS=[$TESTENV]results.xml{testing}
+     - TESTENV=doctesting RESULTS=doc/results.xml
   #  - TESTENV=freeze
-     - TESTENV=docs RESULTS=doc/results.xml
+  #  - TESTENV=docs 
 
 #matrix:
 #  include:
@@ -49,8 +49,8 @@ before_script:
 script:
   - tox --recreate -e $TESTENV
   - testspace $RESULTS "?add#$NAME/$TESTENV"
-  - testspace config project munderseth:mypytest-2
-  - testspace $RESULTS $TESTENV#$TRAVIS_JOB_NUMBER
+  - testspace config project munderseth:mypytest-2/$TESTENV
+  - testspace $RESULTS "#$TRAVIS_JOB_NUMBER"
 #  - testspace $RESULTS "?add#$NAME" 
 #  - testspace $RESULTS $TS2/$TESTENV/#$NAME
 
