@@ -4,19 +4,15 @@ python:
  - '3.5'
 install:
   - pip install -U tox
-  
-  - mkdir -p $PWD/testspace; export PATH=$PATH:$PWD/testspace
-  - curl -s https://testspace-client.s3.amazonaws.com/testspace-linux-daily.tgz | tar -zxvf- -C $PWD/testspace
-  - testspace config url ${MARK_TOKEN}@mark.stridespace.com
-#  - curl -Lo travis_after_all.py https://raw.github.com/dmakhno/travis_after_all/master/travis_after_all.py
+  - mkdir -p $HOME/bin
+  - curl -s https://testspace-client.s3.amazonaws.com/testspace-linux-dev.tgz | tar -zxvf- -C $HOME/bin
+  - testspace config url http://095d8acfaaf71b4a0f3767e41152620ebdda1b31@mark.stridespace.com
+
 
 env:
   global:
- #   - RESULTS="./**/results*.xml{testing}"
     - RESULTS=results.xml{testing}
-    - NAME=travis.Build.${TRAVIS_BUILD_NUMBER}
-    - secure: PCiG8k7DwvwevYSC9eNm27kEXYfZueQuxiR/uEvjfHwhv+hn5pjeN0NFMyM+uabG7LA+3Bd2yl4zokBTF4rti2m35SJvqNTzbQIVGOatqqiJoQnptFLSeTtO4T+wmh+Nq8Z8WjauotyGp1UuLBKdff+ViCRyK9OcQG/t8WKmnNAKVhRkibJFw//ROUCih/nVs7V/Q/QXbUjj2Vj69if5VaqZq/HYkIngvZ4JKx9Xz8fSQImXQWFNG/TVompT5cG9Rdn2mx4rY2HxSH4Z2i13fJv+sDIgzDkJbjEjl5pDGXDECkRH3Rd/75hFqbDK5nKhwXDFcHy2976SzPUPsRWrp068MMIGIL0RqLXo0toZM3nhxe1OqpzAL641Ru4R36ClETmeB2S3R+/uQ174s+uX/iBAHiKVVoUDPhKVW0ZB+m7fG6Zrna8qJbzJPsF9QSlmHAT9on8ps82DmK8jNQDr4w7eKcb8SoMWwvL+MgEM7eoHZk3hf4vzFOFlJzSicxVLFUX8BzE5734CUPZslE7lRg1+5BJswKVc3IFlqO8/PpjqMotopbiexY/2JI1tsOBQy1gMPLE4FpN8Y0SGd0U9c0B+T/uRPzzfvtWhJQbmabzHkynK4qIfQ1XKudPVi5euwqtUovkasBX+HFxRqcf0q83jDEGvhHxZ7acn2UOR/l8=
-
+ 
   matrix:
   #  - TESTENV=coveralls RESULTS="[$TESTENV]results.xml{testing} [$TESTENV]coverage.xml"
      - TESTENV=linting RESULTS=analysis.log{lint} #rst-output.txt
@@ -44,27 +40,7 @@ env:
 #    - env: TESTENV=py37 RESULTS=[$TESTENV]results.xml
 #      python: nightly
 
-before_script:
-  - if [ "${TRAVIS_JOB_NUMBER#*.}" -eq "1" ] ; then testspace "?start#$NAME" ; fi
-  
+
 script:
   - tox --recreate -e $TESTENV
-  - testspace $RESULTS "?add#$NAME/$TESTENV"
-  - testspace config project munderseth:mypytest-2
-  - testspace config space "$TESTENV"
-  - testspace $RESULTS "#$TRAVIS_JOB_NUMBER"
-#  - testspace $RESULTS "?add#$NAME" 
-#  - testspace $RESULTS $TS2/$TESTENV/#$NAME
-
-after_script:
-  - printenv 
-  - testspace -v
-  - testspace config
-
-#after_script:
-#  - python travis_after_all.py https://api.travis-ci.org
-#  - export $(cat .to_export_back)
-#  - |
-#      if [ "$BUILD_LEADER" = "YES" ]; then
-#        testspace $TS?finish#NAME
-#      fi
+  - testspace [$TESTENV]$RESULTS 
