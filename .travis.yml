@@ -14,31 +14,31 @@ env:
     - RESULTS=results.xml{testing}
  
   matrix:
-  #  - TESTENV=coveralls RESULTS="[$TESTENV]results.xml{testing} [$TESTENV]coverage.xml"
+     - TESTENV=coveralls RESULTS="[$TESTENV]results.xml{testing} [$TESTENV]coverage.xml"
      - TESTENV=linting RESULTS=analysis.log{lint} #rst-output.txt
      - TESTENV=py26 
      - TESTENV=py27 
-  #  - TESTENV=py33 RESULTS=[$TESTENV]results.xml{testing}
-  #  - TESTENV=py34 RESULTS=[$TESTENV]results.xml{testing}
-  #  - TESTENV=py35 RESULTS=[$TESTENV]results.xml{testing}
-  #  - TESTENV=pypy RESULTS=[$TESTENV]results.xml{testing}
-  #  - TESTENV=py27-pexpect RESULTS=[$TESTENV]results.xml{testing}
-  #  - TESTENV=py27-xdist RESULTS=[$TESTENV]results.xml{testing}
+     - TESTENV=py33 
+     - TESTENV=py34 
+     - TESTENV=py35 
+     - TESTENV=pypy 
+     - TESTENV=py27-pexpect 
+     - TESTENV=py27-xdist 
      - TESTENV=py27-trial 
-  #  - TESTENV=py35-pexpect RESULTS=[$TESTENV]results.xml{testing}
-  #  - TESTENV=py35-xdist RESULTS=[$TESTENV]results.xml{testing}
+     - TESTENV=py35-pexpect 
+     - TESTENV=py35-xdist 
      - TESTENV=py35-trial 
-  #  - TESTENV=py27-nobyte RESULTS=[$TESTENV]results.xml{testing}
+     - TESTENV=py27-nobyte 
      - TESTENV=doctesting RESULTS=doc/results*.xml
   #  - TESTENV=freeze
   #  - TESTENV=docs 
 
-#matrix:
-#  include:
-#    - env: TESTENV=py36 RESULTS=[$TESTENV]results.xml
-#      python: 3.6-dev
-#    - env: TESTENV=py37 RESULTS=[$TESTENV]results.xml
-#      python: nightly
+matrix:
+  include:
+    - env: TESTENV=py36 
+      python: 3.6-dev
+    - env: TESTENV=py37
+      python: nightly
 
 
 script:
