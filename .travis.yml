@@ -40,7 +40,6 @@ matrix:
     - env: TESTENV=py37
       python: nightly
 
-
 script:
   - tox --recreate -e $TESTENV
   - testspace [$TESTENV]$RESULTS 
