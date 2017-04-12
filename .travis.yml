@@ -14,7 +14,7 @@ env:
     - RESULTS=results.xml{testing}
  
   matrix:
-     - TESTENV=coveralls RESULTS="results.xml{testing} coverage.xml"
+     - TESTENV=coveralls RESULTS="results.xml{testing} [$TESTENV]coverage.xml"
      - TESTENV=linting RESULTS=analysis.log{lint} #rst-output.txt
      - TESTENV=py26 
      - TESTENV=py27 
