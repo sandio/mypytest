@@ -7,7 +7,7 @@ install:
   - pip install -U tox
   - mkdir -p $HOME/bin
   - curl -s https://testspace-client.s3.amazonaws.com/testspace-linux-dev.tgz | tar -zxvf- -C $HOME/bin
-  - testspace config url http://095d8acfaaf71b4a0f3767e41152620ebdda1b31@mark.stridespace.com
+  - testspace config url http://403654ab4fd6e63409eb5f3743428c2e01742c6c@sandio.stridespace.com
 
 env:
   global:
